@@ -1,4 +1,5 @@
-Purpose:write jmeter result data to influxdb,then display by grafana with OS system performance metrics, which help one detect issue quickly.
+Purpose:
+Write jmeter result data to influxdb,then display by grafana with OS system performance metrics, which help one detect issue quickly.
 
 Usage:
 1.compile source with maven
