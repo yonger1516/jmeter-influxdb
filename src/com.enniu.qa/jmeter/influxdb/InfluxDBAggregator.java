@@ -1,8 +1,6 @@
 package com.enniu.qa.jmeter.influxdb;
 
 import com.enniu.qa.jmeter.util.InfluxDbConstant;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
@@ -46,9 +44,15 @@ public class InfluxDBAggregator {
         buffer.get(time).add(res);
     }
 
+    /**
+     * send_second means the number of samples in buffer
+     * it can control the rate of sending data out when Jmeter is running on business
+     * @return
+     */
     public boolean haveDataToSend() {
         return buffer.size() > SEND_SECONDS + 1;
     }
+
 
     public Serie[] getDataToSend() {
         List<Serie> series=new ArrayList<Serie>();
@@ -65,8 +69,12 @@ public class InfluxDBAggregator {
         return (Serie[])series.toArray(new Serie[series.size()]);
     }
 
+    /**
+     * get statistic for jmeter result in a second
+     * @param raw
+     * @return
+     */
     private Serie getAggregateSecond(List<SampleResult> raw) {
-
 
         Date ts = new Date(raw.iterator().next().getEndTime());
 
@@ -88,6 +96,6 @@ public class InfluxDBAggregator {
             cnt++;
         }
 
-        return new Serie.Builder(InfluxDbConstant.DEFAULT_SERIE_NAME).columns(InfluxDbConstant.COLUMNS).values(format.format(ts),cnt,threads/cnt,avg_rt/cnt).build();
+        return new Serie.Builder(InfluxDbConstant.DEFAULT_SERIE_NAME).columns(InfluxDbConstant.COLUMNS).values(format.format(ts),cnt,threads/cnt,avg_rt/cnt,failedCount).build();
     }
 }

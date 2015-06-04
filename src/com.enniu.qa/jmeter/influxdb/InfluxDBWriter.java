@@ -7,6 +7,7 @@ import org.apache.jmeter.samplers.SampleEvent;
 import org.apache.jmeter.testelement.TestStateListener;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;
+
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
- * User: Administrator
+ * User: iyonger
  * Date: 15-6-3
  * Time: 下午11:23
  * To change this template use File | Settings | File Templates.
@@ -23,18 +24,17 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     private static final Logger log = LoggingManager.getLoggerForClass();
     private Object LOCK = new Object();
 
-    public static final String PROJECT = "project";
-
     private InfluxDBAPIClient apiClient;
     private InfluxDBAggregator aggregator;
 
     private BlockingQueue<SampleEvent> processingQueue;
     private Thread processorThread;
 
-    private String ADDRESS="address";
-    private String USER="user";
-    private String PASSWORD="password";
-    private String TESTCASE="serieName";
+    public static final String PROJECT = "project";
+    private String ADDRESS = "address";
+    private String USER = "user";
+    private String PASSWORD = "password";
+    private String TESTCASE = "serieName";
 
 
     public InfluxDBWriter() {
@@ -44,12 +44,17 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     @Override
     public void testStarted(String host) {
         synchronized (LOCK) {
-            this.apiClient=getAPIClient();
+            this.apiClient = getAPIClient();
             initiateOnline();
         }
         super.testStarted(host);
     }
 
+
+    /**
+     * start follow with testStarted method
+     * it will start itself as thread, running as daemon
+     */
     private void initiateOnline() {
 
         try {
@@ -66,7 +71,6 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
         } catch (RuntimeException ex) {
             informUser("Failed to start active test");
             log.warn("Failed to initiate active test", ex);
-            //this.isOnlineInitiated = false;
         }
 
     }
@@ -79,7 +83,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
     public InfluxDBAPIClient getAPIClient() {
-            return new InfluxDBAPIClient(this, getAddress(), getUser(),getPassword());
+        return new InfluxDBAPIClient(this, getAddress(), getUser(), getPassword());
     }
 
 
@@ -134,6 +138,13 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
 
+    /**
+     * continue to write data to db to avoid some data doesn't send out in time
+     * when test finish.
+     * stop thread which start at the beginning
+     *
+     * @param host
+     */
     @Override
     public void testEnded(String host) {
         super.testEnded(host);
@@ -182,7 +193,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
     public void setAddress(String address) {
-       setProperty(ADDRESS,address);
+        setProperty(ADDRESS, address);
     }
 
     public String getUser() {
@@ -190,7 +201,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
     public void setUser(String user) {
-        setProperty(USER,user);
+        setProperty(USER, user);
     }
 
     public String getPassword() {
@@ -198,7 +209,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
     public void setPassword(String password) {
-        setProperty(PASSWORD,password);
+        setProperty(PASSWORD, password);
     }
 
     public String getSerieName() {
@@ -206,6 +217,6 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     }
 
     public void setSerieName(String serieName) {
-        setProperty(TESTCASE,serieName);
+        setProperty(TESTCASE, serieName);
     }
 }

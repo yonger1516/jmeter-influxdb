@@ -30,31 +30,39 @@ public class InfluxDBAPIClient {
         initDB(address,user,password);
     }
 
+    /**
+     * create database in influxdb, in case the database dropped some times
+     * it will throw out runtime exception when creating an exist database,so
+     * catch it and check the message
+     *
+     * @param address
+     * @param user
+     * @param password
+     * @throws RuntimeException
+     */
     public void initDB(String address,String user,String password)throws RuntimeException{
         influxDB = InfluxDBFactory.connect(address, user, password);
 
         try{
-            influxDB.createDatabase(InfluxDbConstant.JMETER_RESULTS);
+            influxDB.createDatabase(InfluxDbConstant.DATABASE);
         }catch (RuntimeException e){
-            if (!e.getMessage().equals("database "+InfluxDbConstant.JMETER_RESULTS+" exists")){
+            if (!e.getMessage().equals("database "+InfluxDbConstant.DATABASE+" exists")){
                 throw e;
             }
         }
 
         callback.notifyAbout("InfluxDb connected successful");
-        log.info("influxdb has been created");
-
-        /*create series ,if not specify using default series name*/
-        /*if (null!=serieName&&!serieName.isEmpty()){
-            DEFAULT_SERIE_NAME=serieName;
-        }
-        defaultSerie=new Serie.Builder(DEFAULT_SERIE_NAME).columns("ts","rps","threads","avg_rt").build();
-        influxDB.write(JMETER_RESULTS, TimeUnit.MILLISECONDS,defaultSerie);*/
     }
 
 
+    /**
+     * write series by batch, it acctually sending data by http restful api
+     *
+     * @param series
+     * @throws IOException
+     */
     public void sendOnlineData(Serie[] series) throws IOException {
-        influxDB.write(InfluxDbConstant.JMETER_RESULTS,TimeUnit.MILLISECONDS,series);
+        influxDB.write(InfluxDbConstant.DATABASE,TimeUnit.MILLISECONDS,series);
     }
 
     public void endOnline(){

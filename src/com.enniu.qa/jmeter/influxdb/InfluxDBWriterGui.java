@@ -14,14 +14,13 @@ import java.awt.*;
  */
 public class InfluxDBWriterGui extends AbstractVisualizer {
 
-    public static final String WIKIPAGE = "InfluxDBWriter";
+    public static final String WIKIPAGE = "InfluxDB Writer @iyonger";
     private JTextField testTitle;
     private JTextField projectKey;
     private JTextArea infoArea;
     private JTextField address;
     private JTextField user;
     private JTextField password;
-
 
     public InfluxDBWriterGui(){
         super();
@@ -36,7 +35,7 @@ public class InfluxDBWriterGui extends AbstractVisualizer {
 
     @Override
     public String getStaticLabel() {
-        return JMeterPluginsUtils.prefixLabel("InfluxDB writer @iyonger");
+        return JMeterPluginsUtils.prefixLabel("InfluxDB Writer");
     }
 
     @Override
@@ -84,7 +83,7 @@ public class InfluxDBWriterGui extends AbstractVisualizer {
         setLayout(new BorderLayout(0, 5));
         setBorder(makeBorder());
 
-        add(JMeterPluginsUtils.addHelpLinkToPanel(makeTitlePanel(), WIKIPAGE), BorderLayout.NORTH);
+        add(JMeterPluginsUtils.addHelpLinkToPanel(makeTitlePanel(), WIKIPAGE), BorderLayout.NORTH);//TODO:the link target jmeter-plugin site, which should be changed
 
         JPanel mainPanel = new JPanel(new GridBagLayout());
 
@@ -137,7 +136,7 @@ public class InfluxDBWriterGui extends AbstractVisualizer {
     }
 
     private void initFields() {
-        testTitle.setText("Project_TestCase");
+        testTitle.setText("project_testcase");
         projectKey.setText("DEFAULT");
         address.setText("http://localhost:8086");
         user.setText("root");
@@ -165,7 +164,6 @@ public class InfluxDBWriterGui extends AbstractVisualizer {
     public void clearData() {
         infoArea.setText("");
     }
-
 
 
     @Override

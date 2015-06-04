@@ -5,7 +5,7 @@ package com.enniu.qa.jmeter.util;
  */
 public class InfluxDbConstant {
 
-    public static final String JMETER_RESULTS="jmeterResults";
+    public static final String DATABASE="jmeter";
     public static String DEFAULT_SERIE_NAME="project_testCase";
-    public static String[] COLUMNS={"ts","rps","threads","avg_rt"};
+    public static String[] COLUMNS={"ts","rps","threads","avg_rt","fails"};
 }
