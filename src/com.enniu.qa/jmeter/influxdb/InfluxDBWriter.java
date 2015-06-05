@@ -58,9 +58,8 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
     private void initiateOnline() {
 
         try {
-            log.info("Starting Loadosophia online test");
 
-            informUser("Started active test");
+            informUser("InfluxDB writer started");
 
             aggregator = new InfluxDBAggregator();
             processingQueue = new LinkedBlockingQueue<SampleEvent>();
@@ -69,8 +68,8 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
 
             processorThread.start();
         } catch (RuntimeException ex) {
-            informUser("Failed to start active test");
-            log.warn("Failed to initiate active test", ex);
+            informUser("Failed to start writer");
+            log.warn("Failed to start writer", ex);
         }
 
     }
@@ -152,7 +151,6 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
             // FIXME: trying to handle safe upgrade, needs to be removed in the future
             // @see https://issues.apache.org/bugzilla/show_bug.cgi?id=56807
             try {
-                log.info("sending data before finish..");
                 this.apiClient.sendOnlineData(aggregator.getDataToSend());
             } catch (IOException ex) {
                 log.warn("Failed to send active test data", ex);
@@ -176,7 +174,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
                 log.warn("Interrupted sleep", ex);
             }
         }
-        log.info("Ending Loadosophia online test");
+        log.info("Ending influxDB writer");
         apiClient.endOnline();
     }
 
