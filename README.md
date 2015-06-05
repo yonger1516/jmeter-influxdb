@@ -13,9 +13,12 @@ mvn clean package
 3.restart jmeter, then you will see the new plugin in listener components
 
 4.connect influxdb
-Input correct influxdb url and user and password. The plugin will write data when running or before finishing.
+
+Input correct influxdb url and user and password. 
+
+The plugin will write data when running or before finishing.
 
 5.view data in influxdb
 
-it create a database named "jmeter", and the serie name is the test case name that you input.
+It create a database named "jmeter", and the serie name is the test case name that you input.
    
