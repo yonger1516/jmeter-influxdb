@@ -1,8 +1,10 @@
 Purpose:
+
 Write jmeter result data to influxdb,then display by grafana with OS system performance metrics, which help one detect issue quickly.
 
 Usage:
 1.compile source with maven
+
 mvn clean package
 
 2.move the generated jar to lib/ext under jmeter root folder
