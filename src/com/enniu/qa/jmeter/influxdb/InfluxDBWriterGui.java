@@ -14,7 +14,7 @@ import java.awt.*;
  */
 public class InfluxDBWriterGui extends AbstractVisualizer {
 
-    public static final String WIKIPAGE = "InfluxDB Writer @iyonger";
+    public static final String WIKIPAGE = "InfluxDB Writer @sum2000@live.cn";
     private JTextField testTitle;
     private JTextField projectKey;
     private JTextArea infoArea;

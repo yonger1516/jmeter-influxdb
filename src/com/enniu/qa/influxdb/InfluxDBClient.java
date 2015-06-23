@@ -10,10 +10,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class InfluxDBClient {
 
+    static InfluxDB influxDB;
+    static String dbName="jmeterResults";
     public static void main(String[] args){
-        InfluxDB influxDB = InfluxDBFactory.connect("http://192.168.2.26:8086", "root", "root");
+         influxDB= InfluxDBFactory.connect("http://192.168.2.201:8086", "root", "root");
 
-        String dbName="jmeterResults";
+
         try{
             influxDB.createDatabase(dbName);
         }catch (RuntimeException e){
@@ -24,13 +26,19 @@ public class InfluxDBClient {
 
         System.out.println("db has been already release");
 
-        Serie serie=new Serie.Builder("default").columns("ts","latency").values(System.currentTimeMillis(),1).values(20, 1).build();
+        deleteSeries("default");
+
+        Serie serie=new Serie.Builder("default").columns("time","latency").values(System.currentTimeMillis(),1).values(System.currentTimeMillis(), 2).build();
         influxDB.write(dbName, TimeUnit.MILLISECONDS,serie);
 
-        System.out.println("series has written");
+       /* System.out.println("series has written");
 
         influxDB.write(dbName, TimeUnit.MILLISECONDS, new Serie.Builder(serie.getName()).columns(serie.getColumns()).values(System.currentTimeMillis(), 444).build());
 
+*/
+    }
 
+    public static void deleteSeries(String serieName){
+        influxDB.deleteSeries(dbName,serieName);
     }
 }

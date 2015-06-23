@@ -123,7 +123,7 @@ public class InfluxDBWriter extends ResultCollector implements StatusNotifierCal
 
                 if (aggregator.haveDataToSend()) {
                     try {
-                        log.info("rearch default buffer size,sending data ...");
+                        //log.info("rearch default buffer size,sending data ...");
                         this.apiClient.sendOnlineData(aggregator.getDataToSend());
                     } catch (IOException ex) {
                         log.warn("Failed to send active test data", ex);

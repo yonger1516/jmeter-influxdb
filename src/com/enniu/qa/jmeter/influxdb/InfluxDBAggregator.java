@@ -16,8 +16,7 @@ public class InfluxDBAggregator {
     private static final Logger log = LoggingManager.getLoggerForClass();
 
     private SortedMap<Long, List<SampleResult>> buffer = new TreeMap<Long, List<SampleResult>>();
-    private static final long SEND_SECONDS = 5;
-    private long lastTime = 0;
+    private List<SampleResult> list=new LinkedList<>();
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 
@@ -26,22 +25,7 @@ public class InfluxDBAggregator {
             log.debug("Got sample to process: " + res);
         }
 
-        log.info("Got sample to process: " + res);
-
-        Long time = res.getEndTime() / 1000;
-        if (!buffer.containsKey(time)) {
-            // we need to create new sec list
-            if (time < lastTime) {
-                // a problem with times sequence - taking last available
-                Iterator<Long> it = buffer.keySet().iterator();
-                while (it.hasNext()) {
-                    time = it.next();
-                }
-            }
-            buffer.put(time, new LinkedList<SampleResult>());
-        }
-        lastTime = time;
-        buffer.get(time).add(res);
+        list.add(res);
     }
 
     /**
@@ -50,23 +34,27 @@ public class InfluxDBAggregator {
      * @return
      */
     public boolean haveDataToSend() {
-        return buffer.size() > SEND_SECONDS + 1;
+        return buffer.size() > InfluxDbConstant.BUFFER_SIZE + 1;
     }
 
 
     public Serie[] getDataToSend() {
         List<Serie> series=new ArrayList<Serie>();
 
-        Iterator<Long> it = buffer.keySet().iterator();
-        //int cnt = 0;
-        while (it.hasNext()) {
-            Long sec = it.next();
-            List<SampleResult> raw = buffer.get(sec);
-            series.add(getAggregateSecond(raw));
-            it.remove();
-            //cnt++;
+       for(SampleResult res:list){
+            series.add(getSerieFromResult(res));
         }
         return (Serie[])series.toArray(new Serie[series.size()]);
+    }
+
+    private Serie getSerieFromResult(SampleResult result){
+        int threads=result.getAllThreads();
+        long duration=result.getTime();
+
+        long start=result.getStartTime();
+        String code=result.getResponseCode();
+
+        return new Serie.Builder(InfluxDbConstant.DEFAULT_SERIE_NAME).columns(InfluxDbConstant.COLUMNS).values(start,threads,duration,code).build();
     }
 
     /**
