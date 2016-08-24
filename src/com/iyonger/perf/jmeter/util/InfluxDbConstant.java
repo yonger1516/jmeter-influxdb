@@ -1,4 +1,4 @@
-package com.enniu.qa.jmeter.util;
+package com.iyonger.perf.jmeter.util;
 
 /**
  * Created by fuyong on 6/4/15.

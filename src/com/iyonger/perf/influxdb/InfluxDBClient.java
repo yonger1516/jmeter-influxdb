@@ -1,4 +1,4 @@
-package com.enniu.qa.influxdb;
+package com.iyonger.perf.influxdb;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;

@@ -1,6 +1,6 @@
-package com.enniu.qa.jmeter.influxdb;
+package com.iyonger.perf.jmeter.influxdb;
 
-import com.enniu.qa.jmeter.util.InfluxDbConstant;
+import com.iyonger.perf.jmeter.util.InfluxDbConstant;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jorphan.logging.LoggingManager;
 import org.apache.log.Logger;

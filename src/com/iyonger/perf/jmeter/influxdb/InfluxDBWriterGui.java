@@ -1,4 +1,4 @@
-package com.enniu.qa.jmeter.influxdb;
+package com.iyonger.perf.jmeter.influxdb;
 
 import kg.apc.jmeter.JMeterPluginsUtils;
 import kg.apc.jmeter.gui.GuiBuilderHelper;
